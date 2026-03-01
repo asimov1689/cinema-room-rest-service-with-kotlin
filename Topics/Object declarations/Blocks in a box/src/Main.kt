@@ -1,0 +1,1 @@
+class Block(val color: String)

@@ -1,0 +1,1 @@
+class Player(val id: Int, val name: String, val hp: Int)
