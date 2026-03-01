@@ -1,0 +1,20 @@
+.DS_Store
+.idea/
+.gradle/
+.gradle-home/
+.kotlin/
+build/
+**/build/
+out/
+*.iml
+
+# Hyperskill/IDE artifacts
+**/.output.txt
+
+# OS/editor
+*.swp
+*.swo
+*~
+
+# Local large docs
+*.pdf

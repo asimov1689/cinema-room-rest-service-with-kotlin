@@ -1,0 +1,15 @@
+type: choice
+is_multiple_choice: false
+options:
+  - text: "<code>val positiveFive = Math.abs.-5</code>"
+  - text: "<code>val positiveFive = Math.abs(negativeFive)</code>"
+  - text: "<code>val positiveFive = negativeFive(Math.abs)</code>"
+files:
+  - name: src/Main.kt
+    visible: true
+    learner_created: false
+feedback_link: https://hyperskill.org/learn/step/19912#comment
+status: Solved
+record: -1
+local_check: false
+
