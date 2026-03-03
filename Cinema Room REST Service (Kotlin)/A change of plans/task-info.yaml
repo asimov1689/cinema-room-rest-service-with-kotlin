@@ -12,6 +12,12 @@ files:
   - name: test/CinemaTests.kt
     visible: true
     learner_created: false
+  - name: test/CinemaTests.java
+    visible: true
+    learner_created: false
+  - name: test/CinemaTests2.java
+    visible: true
+    learner_created: true
 feedback_link: https://hyperskill.org/projects/263/stages/1333/implement#comment
 status: Unchecked
 record: -1

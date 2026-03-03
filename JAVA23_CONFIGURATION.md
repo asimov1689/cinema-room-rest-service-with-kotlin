@@ -40,17 +40,12 @@ This ensures Java 23 is used whenever you run commands in the terminal.
 Created configuration file to force IntelliJ to use Java 23 Gradle JVM.
 
 ### 4. **All build.gradle Files** - ALREADY CONFIGURED ✓
-All `build.gradle` files throughout your project are set to compile for Java 23:
+All `build.gradle` files throughout your project are set to compile with a Java toolchain, and Kotlin bytecode is kept aligned with that same level (so with your Java 23 setup, both compile to 23):
 ```groovy
 tasks.withType(KotlinCompile) {
     kotlinOptions {
-        jvmTarget = "23"
+        jvmTarget = testJava.toString()
     }
-}
-
-tasks.withType(JavaCompile) {
-    sourceCompatibility = '23'
-    targetCompatibility = '23'
 }
 
 java {
@@ -137,4 +132,3 @@ All should show **Java 23** or **version 23** output.
 - **Previous Java 21:** `/Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home`
 - **Gradle Version:** 8.5 (supports Java 23)
 - **Kotlin Version:** 2.1.0 (supports Java 23)
-
