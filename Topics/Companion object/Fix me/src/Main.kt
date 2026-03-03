@@ -1,5 +1,5 @@
 class Player(val id: Int, name: String) {
-    companion object Properties {
+    companion object {
         val defaultSpeed = 8
         val maxSpeed = 13
 

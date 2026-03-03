@@ -5,4 +5,5 @@ content:
   - Multi-dimensional array
   - Object declarations
   - Companion object
-  - Loops  repeat statement (1)
+  - Loops  repeat statement
+  - Try-catch statement
