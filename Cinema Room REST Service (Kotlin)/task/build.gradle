@@ -6,7 +6,7 @@ buildscript {
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$hs.kotlin.version"
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:3.3.0"
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:$hs.spring.bootVersion"
         classpath "io.spring.gradle:dependency-management-plugin:$hs.spring.dependencyManagementVersion"
         classpath "org.jetbrains.kotlin:kotlin-allopen:$hs.kotlin.version"
         classpath "org.jetbrains.kotlin:kotlin-noarg:$hs.kotlin.version"
@@ -20,33 +20,13 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: "kotlin-spring"
 apply plugin: "kotlin-jpa"
 
-springBoot {
-    mainClass = 'cinema.ApplicationKt'
-}
-
 repositories {
     mavenCentral()
 }
 
-sourceSets {
-    main {
-        // Prevent Kotlin files from being picked up twice (once via Java srcDirs, once via Kotlin srcDirs).
-        java.setSrcDirs([])
-        kotlin.setSrcDirs(["src"])
-        resources.setSrcDirs(["src/resources"])
-    }
-    test {
-        // This project’s tests are Kotlin-only and live under `test/`.
-        java.setSrcDirs([])
-        kotlin.setSrcDirs(["test"])
-    }
-}
+sourceSets.main.resources.srcDirs = ["src/resources"]
 
 dependencies {
-    testImplementation sourceSets.main.output
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.jetbrains.kotlin:kotlin-test'
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -57,24 +37,10 @@ dependencies {
 tasks.withType(KotlinCompile) {
     kotlinOptions {
         freeCompilerArgs = ['-Xjsr305=strict']
-        jvmTarget = "23"
-    }
-}
-
-tasks.withType(JavaCompile) {
-    sourceCompatibility = '23'
-    targetCompatibility = '23'
-}
-
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(23))
+        jvmTarget = "$hs.kotlin.javaVersion"
     }
 }
 
 test {
-    jvmArgs '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
-            '-XX:+EnableDynamicAgentLoading',
-            '-Xshare:off'
-    useJUnitPlatform()
+    jvmArgs '--add-opens', 'java.base/java.lang=ALL-UNNAMED'
 }

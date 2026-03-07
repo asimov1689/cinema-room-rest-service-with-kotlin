@@ -22,10 +22,6 @@ rootProject.projectDir.eachDirRecurse {
         return
     }
     def taskRelativePath = rootDir.toPath().relativize(it.toPath())
-    def topLevelDirName = taskRelativePath.nameCount > 0 ? taskRelativePath.getName(0).toString() : ""
-    if (topLevelDirName.startsWith("Topics")) {
-        return
-    }
     def parts = []
     for (name in taskRelativePath) {
         parts.add(sanitizeName(name.toString()))
