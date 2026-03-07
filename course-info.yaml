@@ -11,6 +11,10 @@ programming_language: Kotlin
 content:
   - Cinema Room REST Service (Kotlin)
   - Topics (3)
-additional_files: [ ]
+additional_files:
+  - name: build.gradle
+    visible: true
+  - name: settings.gradle
+    visible: true
 mode: Study
 yaml_version: 5
