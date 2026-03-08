@@ -9,33 +9,30 @@ files:
   - name: build.gradle
     visible: true
     learner_created: false
-  - name: test/CinemaTests.kt
+  - name: src/cinema/dto/SeatDto.kt
     visible: true
     learner_created: false
-  - name: src/cinema/dto/PurchaseRequestDto.kt
+  - name: src/cinema/dto/SeatsResponseDto.kt
     visible: true
-    learner_created: true
-  - name: src/cinema/dto/PurchaseResponseDto.kt
+    learner_created: false
+  - name: src/cinema/service/CinemaService.kt
     visible: true
-    learner_created: true
-  - name: src/cinema/dto/ReturnRequestDto.kt
+    learner_created: false
+  - name: src/cinema/controller/CinemaController.kt
     visible: true
-    learner_created: true
-  - name: src/cinema/dto/ReturnResponseDto.kt
+    learner_created: false
+  - name: test/CinemaTests.java
     visible: true
-    learner_created: true
-  - name: src/cinema/dto/ErrorResponseDto.kt
-    visible: true
-    learner_created: true
+    learner_created: false
   - name: test/cinema/controller/CinemaControllerTest.kt
     visible: true
     learner_created: true
-  - name: test/CinemaTests.java
+  - name: test/cinema/service/CinemaServiceTest.kt
     visible: true
     learner_created: true
 feedback_link: https://hyperskill.org/projects/263/stages/1332/implement#comment
 status: Solved
 feedback:
   message: Congratulations!
-  time: "Sun, 08 Mar 2026 12:16:52 UTC"
+  time: "Sun, 08 Mar 2026 12:40:10 UTC"
 record: -1
