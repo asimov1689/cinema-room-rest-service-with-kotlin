@@ -24,6 +24,18 @@ repositories {
     mavenCentral()
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 21
+}
+
 sourceSets.main.resources.srcDirs = ["src/resources"]
 
 dependencies {
@@ -32,15 +44,18 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
     implementation 'org.jetbrains.kotlin:kotlin-reflect'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5'
 }
 
 tasks.withType(KotlinCompile) {
     kotlinOptions {
         freeCompilerArgs = ['-Xjsr305=strict']
-        jvmTarget = "$hs.kotlin.javaVersion"
+        jvmTarget = "21"
     }
 }
 
 test {
+    useJUnitPlatform()
     jvmArgs '--add-opens', 'java.base/java.lang=ALL-UNNAMED'
 }
