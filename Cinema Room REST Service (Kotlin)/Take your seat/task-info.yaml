@@ -30,9 +30,12 @@ files:
   - name: test/cinema/controller/CinemaControllerTest.kt
     visible: true
     learner_created: true
+  - name: test/CinemaTests.java
+    visible: true
+    learner_created: true
 feedback_link: https://hyperskill.org/projects/263/stages/1332/implement#comment
 status: Solved
 feedback:
   message: Congratulations!
-  time: "Sun, 08 Mar 2026 12:10:17 UTC"
+  time: "Sun, 08 Mar 2026 12:16:52 UTC"
 record: -1
