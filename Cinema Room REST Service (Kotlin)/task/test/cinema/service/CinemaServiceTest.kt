@@ -1,53 +1,125 @@
 package cinema.service
 
-
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
+import cinema.dto.PurchaseRequestDto
+import cinema.dto.PurchaseResponseDto
+import cinema.dto.ReturnRequestDto
+import cinema.dto.ReturnResponseDto
+import cinema.dto.ErrorResponseDto
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.springframework.http.HttpStatus
 
 class CinemaServiceTest {
 
+    private lateinit var cinemaService: CinemaService
+
+    @BeforeEach
+    fun setUp() {
+        cinemaService = CinemaService()
+    }
+
     @Test
-    fun `getSeats returns 9x9 cinema and 81 available seats`() {
+    fun `should return all seats initially`() {
         // Arrange
-        val service = CinemaService()
 
         // Act
-        val result = service.getSeats()
+        val result = cinemaService.getSeats()
 
-
-      // Assert
+        // Assert
         assertEquals(9, result.total_rows)
         assertEquals(9, result.total_columns)
         assertEquals(81, result.available_seats.size)
     }
 
     @Test
-    fun `getSeats contains boundary seats (1,1) and (9,9)`() {
+    fun `should purchase a valid ticket`() {
         // Arrange
-        val service = CinemaService()
+        val request = PurchaseRequestDto(row = 1, column = 1)
 
         // Act
-        val result = service.getSeats()
-        val first = result.available_seats.first()
-        val last = result.available_seats.last()
+        val response = cinemaService.purchaseTicket(request)
 
         // Assert
-        assertEquals(1, first.row)
-        assertEquals(1, first.column)
-        assertEquals(9, last.row)
-        assertEquals(9, last.column)
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        val body = response.body as PurchaseResponseDto
+        assertNotNull(body.token)
+        assertEquals(1, body.ticket.row)
+        assertEquals(1, body.ticket.column)
+        assertEquals(10, body.ticket.price)
+
+        val seatsAfterPurchase = cinemaService.getSeats()
+        assertEquals(80, seatsAfterPurchase.available_seats.size)
+        assertFalse(seatsAfterPurchase.available_seats.any { it.row == 1 && it.column == 1 })
     }
+
     @Test
-    fun `getSeats contains only valid coordinates within 1 to 9`() {
+    fun `should reject purchase when seat is out of bounds`() {
         // Arrange
-        val service = CinemaService()
+        val request = PurchaseRequestDto(row = 10, column = 1)
 
         // Act
-        val result = service.getSeats()
+        val response = cinemaService.purchaseTicket(request)
 
         // Assert
-        assertTrue(result.available_seats.all { it.row in 1..9 })
-        assertTrue(result.available_seats.all { it.column in 1..9 })
+        assertEquals(HttpStatus.BAD_REQUEST, response.statusCode)
+
+        val body = response.body as ErrorResponseDto
+        assertEquals("The number of a row or column is out of bounds!", body.error)
+    }
+
+    @Test
+    fun `should reject purchase when seat is already purchased`() {
+        // Arrange
+        val request = PurchaseRequestDto(row = 2, column = 2)
+        cinemaService.purchaseTicket(request)
+
+        // Act
+        val response = cinemaService.purchaseTicket(request)
+
+        // Assert
+        assertEquals(HttpStatus.BAD_REQUEST, response.statusCode)
+
+        val body = response.body as ErrorResponseDto
+        assertEquals("The ticket has been already purchased!", body.error)
+    }
+
+    @Test
+    fun `should return a purchased ticket`() {
+        // Arrange
+        val purchaseRequest = PurchaseRequestDto(row = 3, column = 3)
+        val purchaseResponse = cinemaService.purchaseTicket(purchaseRequest)
+        val purchaseBody = purchaseResponse.body as PurchaseResponseDto
+        val returnRequest = ReturnRequestDto(token = purchaseBody.token)
+
+        // Act
+        val returnResponse = cinemaService.returnTicket(returnRequest)
+
+        // Assert
+        assertEquals(HttpStatus.OK, returnResponse.statusCode)
+
+        val body = returnResponse.body as ReturnResponseDto
+        assertEquals(3, body.returned_ticket.row)
+        assertEquals(3, body.returned_ticket.column)
+        assertEquals(10, body.returned_ticket.price)
+
+        val seatsAfterReturn = cinemaService.getSeats()
+        assertTrue(seatsAfterReturn.available_seats.any { it.row == 3 && it.column == 3 })
+    }
+
+    @Test
+    fun `should reject return with wrong token`() {
+        // Arrange
+        val request = ReturnRequestDto(token = "wrong-token")
+
+        // Act
+        val response = cinemaService.returnTicket(request)
+
+        // Assert
+        assertEquals(HttpStatus.BAD_REQUEST, response.statusCode)
+
+        val body = response.body as ErrorResponseDto
+        assertEquals("Wrong token!", body.error)
     }
 }
