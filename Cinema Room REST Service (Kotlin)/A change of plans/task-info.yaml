@@ -9,40 +9,31 @@ files:
   - name: build.gradle
     visible: true
     learner_created: false
-  - name: test/CinemaTests.kt
+  - name: src/cinema/dto/SeatDto.kt
+    visible: true
+    learner_created: false
+  - name: src/cinema/dto/SeatsResponseDto.kt
+    visible: true
+    learner_created: false
+  - name: src/cinema/service/CinemaService.kt
+    visible: true
+    learner_created: false
+  - name: src/cinema/controller/CinemaController.kt
     visible: true
     learner_created: false
   - name: test/CinemaTests.java
     visible: true
     learner_created: false
-  - name: src/cinema/dto/SeatDto.kt
+  - name: test/cinema/controller/CinemaControllerTest.kt
     visible: true
-    learner_created: true
-  - name: src/cinema/dto/SeatsResponseDto.kt
+    learner_created: false
+  - name: test/cinema/service/CinemaServiceTest.kt
     visible: true
-    learner_created: true
-  - name: src/cinema/service/CinemaService.kt
-    visible: true
-    learner_created: true
-  - name: src/cinema/controller/CinemaController.kt
+    learner_created: false
+  - name: test/CinemaTests.kt
     visible: true
     learner_created: true
   - name: test/CinemaTests2.java
-    visible: true
-    learner_created: true
-  - name: src/cinema/dto/PurchaseRequestDto.kt
-    visible: true
-    learner_created: true
-  - name: src/cinema/dto/PurchaseResponseDto.kt
-    visible: true
-    learner_created: true
-  - name: src/cinema/dto/ReturnRequestDto.kt
-    visible: true
-    learner_created: true
-  - name: src/cinema/dto/ReturnResponseDto.kt
-    visible: true
-    learner_created: true
-  - name: src/cinema/dto/ErrorResponseDto.kt
     visible: true
     learner_created: true
 feedback_link: https://hyperskill.org/projects/263/stages/1333/implement#comment
