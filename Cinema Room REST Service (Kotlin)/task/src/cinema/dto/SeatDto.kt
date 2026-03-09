@@ -1,6 +1,7 @@
 package cinema.dto
 
-data class SeatDto (
+data class SeatDto(
     val row: Int,
-    val column: Int
+    val column: Int,
+    val price: Int
 )

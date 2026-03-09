@@ -1,0 +1,113 @@
+<div class="step-text">
+<p><strong>Inheritance</strong> is a powerful tool for reusing an existing class. With inheritance, Kotlin ensures that both the base and the derived classes are correctly initialized. A derived class may take advantage of the <a class="theory-lookup not-relevant" href="/learn/step/15614" target="_blank" title="In Kotlin, a base class is a class that forms the foundation for other classes, also known as derived classes. | It can have multiple constructors, including a primary constructor and secondary ones. A derived class can initialize the base class by implementing one or more of its constructors. The base class can also define common behavior for derived classes through abstract methods, which are methods without implementation that must be overridden in derived classes.">base class</a>'s <a class="theory-lookup not-relevant" href="/learn/step/15614" target="_blank" title="In Kotlin, multiple constructors refer to the ability of a class to have more than one constructor, each with its own logic for initializing the class properties. | This is useful when you need to create several different instances of a class with varying initial values. Custom constructors, declared within the class body and having their own parameter list, allow you to create multiple constructors for the same class. For example, a derived class may implement multiple constructors to initialize the base class in different ways.">multiple constructors</a> in order to create its own multiple constructor scheme.</p>
+<h5 id="inheritance-and-primary-constructor">Inheritance and primary constructor</h5>
+<p>The most simple case occurs when the base class doesn't have any constructor parameters. In the following example, the <code class="language-kotlin">Fiction</code> class inherits from the <code class="language-kotlin">Book</code> class, which has no parameters. Note that the parentheses for <code class="language-kotlin">Book</code> are required in order to initialize it.</p>
+<pre><code class="language-kotlin">open class Book
+
+class Fiction : Book()</code></pre>
+<p>When the base class has constructor parameters, the derived class should take care of them. Kotlin will not allow a program to compile if the base class isn't properly initiated. The following examples show some cases of the base class initiation through the <a class="theory-lookup not-relevant" href="/learn/step/15614" target="_blank" title="In Kotlin, a primary constructor is a special type of constructor that is declared as part of the class header, after the class name. | It can have parameters that are used to initialize class properties directly or within an initializer block. The primary constructor cannot contain any code, but initialization code can be placed in initializer blocks. If a class requires more complex initialization that cannot be covered by the primary constructor, secondary constructors can be used. These secondary constructors must delegate to the primary constructor either directly or indirectly through another secondary constructor.">primary constructor</a>. Here, we have the open class <code class="language-kotlin">Book</code>, from which we inherit the <code class="language-kotlin">ExtBook</code>, <code class="language-kotlin">NoInfoBook</code>, and <code class="language-kotlin">FictionBook</code> classes.</p>
+<pre><code class="language-kotlin">open class Book(val title: String, val author: String = "Unknown",
+                val genre: String = "Unknown", val isbn: Long = 0)
+
+class ExtBook(val publisher: String = "Unknown", title: String,
+              genre: String = "Unknown", author: String = "Unknown",
+              isbn: Long = 0) : Book(title, author, genre, isbn)
+
+class NoInfoBook(title: String, author: String = "Unknown") : Book(title, author)
+
+class FictionBook(title: String, author: String = "Unknown",
+              isbn: Long = 0) : Book(title, author, genre = "fiction", isbn)</code></pre>
+<p>The <code class="language-kotlin">ExtBook</code> class has a new property called <code class="language-kotlin">publisher</code>, which has to be declared with <code class="language-kotlin">var</code> or <code class="language-kotlin">val</code>. All other parameters are not new properties, and they are used to <a class="theory-lookup not-relevant" href="/learn/step/15614" target="_blank" title="In Kotlin, initialization refers to the assignment of an initial value to a variable when it is declared. | This can be done using the `=` symbol followed by the value. When using the `val` keyword, initialization is required. If the base class has a constructor parameter, the derived class must take care of it. Kotlin will not allow a program to compile if the base class is not properly initiated. Initialization is a lightweight operation for simple objects, but creating instances of more complex classes can be expensive.">initialize</a> the respective properties of the base class <code class="language-kotlin">Book</code>.</p>
+<p>The <code class="language-kotlin">NoInfoBook</code> class has only 2 parameters that are used to initialize the base class. All other base class parameters take their default values.</p>
+<p>Finally, the <code class="language-kotlin">FictionBook</code> class has only 3 parameters that are used to initialize 3 parameters of the base class. The fourth parameter, named <code class="language-kotlin">genre</code>, is explicitly set within the <code class="language-kotlin">Book</code> parentheses.</p>
+<h5 id="inheritance-and-secondary-constructor">Inheritance and secondary constructor</h5>
+<p>A base class may have multiple constructors, which may include a primary constructor and many secondary ones. A derived class might use one or more of those in order to initiate the base class by implementing multiple constructors itself. In the following example, the <code class="language-kotlin">Derived</code> class, which inherits the <code class="language-kotlin">Base</code> class, has multiple constructors.</p>
+<pre><code class="language-kotlin">open class Base(val beta: Int, val gamma: Int, var message: String = "") {
+    constructor(beta: Int, message: String = "") : this(beta, 0, message)
+}
+
+class Derived(val alpha: Int, beta: Int, gamma: Int, message: String = "") : Base(beta, gamma, message) {
+    constructor(alpha: Int, beta: Int, message: String = "") : this(alpha, beta, 0, message)
+}</code></pre>
+<p>In the above example, the <code class="language-kotlin">Base</code> class can be initiated in 4 different ways. For example:</p>
+<pre><code class="language-kotlin">Base(10)                    // beta is set
+Base(10, 20)                // beta and gamma are set
+Base(10, 20, "My message")  // beta, gamma, and a message are set
+Base(10, "My message")      // beta and a message are set</code></pre>
+<p>The <code class="language-kotlin">Base</code> class <a class="theory-lookup not-relevant" href="/learn/step/15614" target="_blank" title="In Kotlin, a secondary constructor is an additional constructor that can be defined in a class, along with a primary constructor. | They are used when the primary constructor is not sufficient or when you need to perform extra initialization steps. Secondary constructors are defined within the class body using the `constructor` keyword, followed by parentheses containing the constructor's parameters. They provide more flexibility than primary constructors, but they require explicit delegation to the primary constructor. The base class's constructor must be completed before the secondary constructor's body is executed.">secondary constructor</a> is using delegation to the primary constructor by means of the keyword <code class="language-kotlin">this</code>.</p>
+<p>The <code class="language-kotlin">Derived</code> class declares the same parameter list as the <code class="language-kotlin">Base</code> class, a similar secondary constructor, and also a new property called <code class="language-kotlin">alpha</code>. Thus, the class can be initiated in similar ways as the <code class="language-kotlin">Base</code> class. For example:</p>
+<pre><code class="language-kotlin">Derived(0, 10)
+Derived(0, 10, 20)
+Derived(0, 10, 20, "My message")
+Derived(0, 10, "My message")</code></pre>
+<p>Of course, if we want to restrict the ways in which our <code class="language-kotlin">Derived</code> class can be initiated, then we should make further use of the secondary constructors. In the following example, we explicitly define each possible constructor for the <code class="language-kotlin">Derived</code> class by using secondary constructors. The <code class="language-kotlin">Derived</code> class adds a new property called <code class="language-kotlin">alpha</code>, like in the previous example.</p>
+<pre><code class="language-kotlin">open class Base(val beta: Int, val gamma: Int = 0, var message: String = "")
+
+class Derived : Base {
+    val alpha: Int
+
+    constructor(alphaConstr: Int, beta: Int) : super(beta) {
+        alpha = alphaConstr
+    }
+
+    constructor(alphaConstr: Int, beta: Int, gamma: Int) : super(beta, gamma) {
+        alpha = alphaConstr
+    }
+
+    constructor(alphaConstr: Int, beta: Int, gamma: Int, message: String) : super(beta, gamma, message) {
+        alpha = alphaConstr
+    }
+
+    constructor(alphaConstr: Int, beta: Int, message: String) : super(beta, message = message) {
+        alpha = alphaConstr
+    }
+}</code></pre>
+<p>Each secondary constructor calls upon a <code class="language-kotlin">Base</code> class constructor by using the keyword <code class="language-kotlin">super</code>. Here, we can't have a primary constructor. Also, note the absence of parentheses after the class names.</p>
+<p>The new property <code class="language-kotlin">alpha</code> is defined within the class brackets, and it is not given any value. This is possible because its value is set in every secondary constructor. Thus, it is assured that <code class="language-kotlin">alpha</code> is going to be initialized.</p>
+<p>Here we defined 4 constructors to match the different constructors of the <code class="language-kotlin">Base</code> class, but we could limit them to only those needed.</p>
+<h5 id="inheritance-and-init">Inheritance and init</h5>
+<p>In case a class has a primary constructor, some <code class="language-kotlin">init</code> blocks, and some secondary constructors, then the order of execution is the following:</p>
+<ul>
+<li>The primary constructor, even if a secondary one is called. The primary one is called first through the keyword <code class="language-kotlin">this</code>;</li>
+<li>All <code class="language-kotlin">init</code> blocks, sequentially in the order they appear;</li>
+<li>The second constructor block, in case this constructor was called.</li>
+</ul>
+<p>In case of inheritance, the base class is initiated first: either by calling its primary or a secondary constructor, through the derived class. So, the sequence order is the following:</p>
+<ul>
+<li>Base class primary constructor, even if a base class secondary constructor is called through the derived class;</li>
+<li>Base class <code class="language-kotlin">init</code> blocks, sequentially in the order they appear;</li>
+<li>Base class secondary constructor block, in case this constructor was called;</li>
+<li>Derived class primary constructor, even if a derived class secondary constructor is called;</li>
+<li>Derived class <code class="language-kotlin">init</code> blocks, sequentially in the order they appear;</li>
+<li>Derived class secondary constructor block, in case this constructor was called.</li>
+</ul>
+<p>The following code is an example of the above. There are a <code class="language-kotlin">Base</code> and a <code class="language-kotlin">Derived</code> classes, both with primary constructors, <code class="language-kotlin">init</code> blocks, and secondary constructors. The <code class="language-kotlin">Derived</code> class is initiated through a secondary constructor.</p>
+<pre><code class="language-kotlin">open class Base(val message: String, val email: String) {
+    init { println("Base class init") }
+    constructor(email: String) : this("No message", email) { println("Base class secondary") }
+}
+
+class Derived(email: String) : Base(email) {
+    init { println("Derived class init") }
+    constructor() : this("example.com") { println("Derived class secondary") }
+}
+
+fun main() {
+    val myDerived = Derived()
+}</code></pre>
+<p>When the <code class="language-kotlin">Derived</code> class is initiated through a secondary constructor, then the blocks are executed in the following order:</p>
+<ul>
+<li>Base class <code class="language-kotlin">init</code> block;</li>
+<li>Base class secondary block;</li>
+<li>Derived class <code class="language-kotlin">init</code> block;</li>
+<li>Derived class secondary block.</li>
+</ul>
+<p>This can be verified with the above code output:</p>
+<pre><code class="language-no-highlight">Base class init
+Base class secondary
+Derived class init
+Derived class secondary</code></pre>
+<h5 id="conclusion">Conclusion</h5>
+<p>It is easy to use <strong>inheritance</strong>. However, in order to fully utilize the <code class="language-kotlin">Base</code> class, you need to apply the right constructors and mind the <code class="language-kotlin">Base</code> class initialization. In this topic, we've learned about different ways to accomplish that.<br/>
+</p>
+</div>
