@@ -7,6 +7,7 @@ import cinema.dto.ReturnRequestDto
 import cinema.dto.ReturnResponseDto
 import cinema.dto.SeatDto
 import cinema.dto.SeatsResponseDto
+import cinema.dto.StatsResponseDto
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
@@ -16,6 +17,7 @@ private const val TOTAL_ROWS = 9
 private const val TOTAL_COLUMNS = 9
 private const val FRONT_ROWS_PRICE = 10
 private const val BACK_ROWS_PRICE = 8
+private const val STATS_PASSWORD = "super_secret"
 
 @Service
 class CinemaService {
@@ -73,6 +75,26 @@ class CinemaService {
         return ResponseEntity.ok(
             ReturnResponseDto(
                 returned_ticket = seat
+            )
+        )
+    }
+
+    fun getStats(password: String?): ResponseEntity<Any> {
+        if (password != STATS_PASSWORD) {
+            return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(ErrorResponseDto("The password is wrong!"))
+        }
+
+        val currentIncome = purchasedTickets.values.sumOf { it.price }
+        val numberOfAvailableSeats = availableSeats.size
+        val numberOfPurchasedTickets = purchasedTickets.size
+
+        return ResponseEntity.ok(
+            StatsResponseDto(
+                current_income = currentIncome,
+                number_of_available_seats = numberOfAvailableSeats,
+                number_of_purchased_tickets = numberOfPurchasedTickets
             )
         )
     }
