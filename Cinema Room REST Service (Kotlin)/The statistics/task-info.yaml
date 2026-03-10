@@ -9,9 +9,6 @@ files:
   - name: build.gradle
     visible: true
     learner_created: false
-  - name: test/CinemaTests.kt
-    visible: true
-    learner_created: false
   - name: src/cinema/dto/StatsResponseDto.kt
     visible: true
     learner_created: true
