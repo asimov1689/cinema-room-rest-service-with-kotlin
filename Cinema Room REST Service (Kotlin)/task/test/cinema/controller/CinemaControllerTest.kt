@@ -4,11 +4,11 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.annotation.DirtiesContext
 import org.springframework.http.MediaType
+import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.post
 import org.springframework.test.web.servlet.get
+import org.springframework.test.web.servlet.post
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -143,5 +143,62 @@ class CinemaControllerTest {
             status { isBadRequest() }
             jsonPath("$.error") { value("Wrong token!") }
         }
+    }
+
+    @Test
+    fun `should reject stats without password`() {
+        mockMvc.get("/stats")
+            .andExpect {
+                status { isUnauthorized() }
+                jsonPath("$.error") { value("The password is wrong!") }
+            }
+    }
+
+    @Test
+    fun `should reject stats with wrong password`() {
+        mockMvc.get("/stats?password=wrong_password")
+            .andExpect {
+                status { isUnauthorized() }
+                jsonPath("$.error") { value("The password is wrong!") }
+            }
+    }
+
+    @Test
+    fun `should return stats with correct password`() {
+        val firstPurchase = """
+            {
+              "row": 1,
+              "column": 1
+            }
+        """.trimIndent()
+
+        val secondPurchase = """
+            {
+              "row": 1,
+              "column": 2
+            }
+        """.trimIndent()
+
+        mockMvc.post("/purchase") {
+            contentType = MediaType.APPLICATION_JSON
+            content = firstPurchase
+        }.andExpect {
+            status { isOk() }
+        }
+
+        mockMvc.post("/purchase") {
+            contentType = MediaType.APPLICATION_JSON
+            content = secondPurchase
+        }.andExpect {
+            status { isOk() }
+        }
+
+        mockMvc.get("/stats?password=super_secret")
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.current_income") { value(20) }
+                jsonPath("$.number_of_available_seats") { value(79) }
+                jsonPath("$.number_of_purchased_tickets") { value(2) }
+            }
     }
 }

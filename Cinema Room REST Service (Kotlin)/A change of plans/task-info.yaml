@@ -30,12 +30,9 @@ files:
   - name: test/cinema/service/CinemaServiceTest.kt
     visible: true
     learner_created: false
-  - name: test/CinemaTests.kt
-    visible: true
-    learner_created: true
-  - name: test/CinemaTests2.java
-    visible: true
-    learner_created: true
 feedback_link: https://hyperskill.org/projects/263/stages/1333/implement#comment
-status: Unchecked
+status: Solved
+feedback:
+  message: Congratulations!
+  time: "Tue, 10 Mar 2026 12:06:43 UTC"
 record: -1

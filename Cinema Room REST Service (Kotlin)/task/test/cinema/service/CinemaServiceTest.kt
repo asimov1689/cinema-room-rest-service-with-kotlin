@@ -1,11 +1,15 @@
 package cinema.service
 
+import cinema.dto.ErrorResponseDto
 import cinema.dto.PurchaseRequestDto
 import cinema.dto.PurchaseResponseDto
 import cinema.dto.ReturnRequestDto
 import cinema.dto.ReturnResponseDto
-import cinema.dto.ErrorResponseDto
-import org.junit.jupiter.api.Assertions.*
+import cinema.dto.StatsResponseDto
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
@@ -121,5 +125,51 @@ class CinemaServiceTest {
 
         val body = response.body as ErrorResponseDto
         assertEquals("Wrong token!", body.error)
+    }
+
+    @Test
+    fun `should reject stats without password`() {
+        // Arrange
+
+        // Act
+        val response = cinemaService.getStats(null)
+
+        // Assert
+        assertEquals(HttpStatus.UNAUTHORIZED, response.statusCode)
+
+        val body = response.body as ErrorResponseDto
+        assertEquals("The password is wrong!", body.error)
+    }
+
+    @Test
+    fun `should reject stats with wrong password`() {
+        // Arrange
+
+        // Act
+        val response = cinemaService.getStats("wrong_password")
+
+        // Assert
+        assertEquals(HttpStatus.UNAUTHORIZED, response.statusCode)
+
+        val body = response.body as ErrorResponseDto
+        assertEquals("The password is wrong!", body.error)
+    }
+
+    @Test
+    fun `should return stats with correct password`() {
+        // Arrange
+        cinemaService.purchaseTicket(PurchaseRequestDto(row = 1, column = 1))
+        cinemaService.purchaseTicket(PurchaseRequestDto(row = 1, column = 2))
+
+        // Act
+        val response = cinemaService.getStats("super_secret")
+
+        // Assert
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        val body = response.body as StatsResponseDto
+        assertEquals(20, body.current_income)
+        assertEquals(79, body.number_of_available_seats)
+        assertEquals(2, body.number_of_purchased_tickets)
     }
 }
