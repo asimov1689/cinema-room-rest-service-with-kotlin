@@ -20,7 +20,7 @@ class CinemaServiceTest {
 
     @BeforeEach
     fun setUp() {
-        cinemaService = CinemaService()
+        cinemaService = CinemaService("super_secret")
     }
 
     @Test
