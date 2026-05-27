@@ -1,1 +1,0 @@
-# cinema-room-rest-service-with-kotlin

@@ -1,20 +1,8 @@
-.DS_Store
-.idea/
 .gradle/
-.gradle-home/
-.kotlin/
 build/
-**/build/
 out/
+*.class
+
+.DS_Store
 *.iml
-
-# Hyperskill/IDE artifacts
-**/.output.txt
-
-# OS/editor
-*.swp
-*.swo
-*~
-
-# Local large docs
-*.pdf
+.idea/
